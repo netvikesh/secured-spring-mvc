@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "net.vikesh.ssm.controller")
-public class DispatcherConfig extends WebMvcConfigurerAdapter {
+public class WebContext extends WebMvcConfigurerAdapter {
 
     /**
      * {@inheritDoc}
