@@ -1,6 +1,7 @@
 package net.vikesh.ssm.config;
 
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -26,16 +27,32 @@ public class DBContext {
     @Resource
     private Environment env;
 
+    @Value("${hibernate.dialect}")
+    private String hibernateDialect;
+
+    @Value("${hibernate.hbm2ddl.auto}")
+    private String hbm2ddl;
+
+    @Value("${hibernate.show_sql}")
+    private String showSql;
+
+    @Value("${hibernate.format_sql}")
+    private String formatSql;
+
     @Bean(destroyMethod = "close", name = "defaultDataSource")
     @AliasFor("dataSource")
-    public DataSource dataSource() {
+    public DataSource dataSource(@Value("${database.username}") final String username,
+                                 @Value("${database.driver}") String driver,
+                                 @Value("${database.password}") String password,
+                                 @Value("${database.url}") String url,
+                                 @Value("${database.maxIdle}") int maxIdle
+    ) {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setUsername(env.getProperty("database.username"));
-        dataSource.setPassword(env.getProperty("database.password"));
-        dataSource.setDriverClassName(env.getProperty("database.driver"));
-        dataSource.setUrl(env.getProperty("database.url"));
-        dataSource.setMaxIdle(Integer.valueOf(env.getProperty("database.maxIdle")));
-        dataSource.setValidationQuery(env.getProperty("database.validationQuery"));
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url);
+        dataSource.setMaxIdle(maxIdle);
         return dataSource;
     }
 
@@ -54,7 +71,7 @@ public class DBContext {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan(new String[]{});
+        em.setPackagesToScan();
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setJpaProperties(getJpaProperties());
         return em;
@@ -62,15 +79,10 @@ public class DBContext {
 
     private Properties getJpaProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect"));
-        properties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto", "update"));
-        if (env.getProperty("deployment.environment", "develop").equalsIgnoreCase("develop")) {
-            properties.setProperty("hibernate.show_sql", env.getProperty("hibernate.show_sql", "true"));
-            properties.setProperty("hibernate.format_sql", env.getProperty("hibernate.format_sql", "true"));
-        } else {
-            properties.setProperty("hibernate.show_sql", env.getProperty("hibernate.show_sql", "false"));
-            properties.setProperty("hibernate.format_sql", env.getProperty("hibernate.format_sql", "false"));
-        }
+        properties.setProperty("hibernate.dialect", hibernateDialect);
+        properties.setProperty("hibernate.hbm2ddl.auto", hbm2ddl);
+        properties.setProperty("hibernate.show_sql", showSql);
+        properties.setProperty("hibernate.format_sql", formatSql);
         return properties;
     }
 

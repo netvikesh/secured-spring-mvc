@@ -1,11 +1,14 @@
 package net.vikesh.ssm.config;
 
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+
+import javax.annotation.Resource;
 
 /**
  * Created by Vikesh on 09-Dec-16.
@@ -14,19 +17,22 @@ import org.springframework.core.io.ClassPathResource;
 @Import(DBContext.class)
 public class RootContext {
 
+    @Resource
+    private Environment environment;
+
     @Bean
     @Profile("development")
-    public static PropertyPlaceholderConfigurer development() {
-        PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
-        configurer.setLocation(new ClassPathResource("classpath:/junit.properties"));
+    public static PropertySourcesPlaceholderConfigurer development() {
+        PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+        configurer.setLocation(new ClassPathResource("junit.properties"));
         return configurer;
     }
 
     @Bean
     @Profile("production")
-    public static PropertyPlaceholderConfigurer production() {
-        PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
-        configurer.setLocation(new ClassPathResource("classpath:/project.properties"));
+    public static PropertySourcesPlaceholderConfigurer production() {
+        PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+        configurer.setLocation(new ClassPathResource("project.properties"));
         return configurer;
     }
 }
