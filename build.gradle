@@ -1,3 +1,5 @@
+import java.nio.file.Files
+
 group 'net.vikesh.web'
 version '1.0-SNAPSHOT'
 
@@ -15,13 +17,15 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.5'
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.5.Final'
     compile group: 'org.hibernate', name: 'hibernate-validator', version: '5.3.3.Final'
-    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.4.RELEASE'
-    compile group: 'org.springframework.security', name: 'spring-security-web', version: '4.2.0.RELEASE'
-    compile group: 'org.springframework', name: 'spring-tx', version: '4.3.4.RELEASE'
-    compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: '4.2.0.RELEASE'
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.5.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-web', version: '4.2.1.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: '4.2.1.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-config', version: '4.2.1.RELEASE'
+    compile group: 'org.springframework', name: 'spring-tx', version: '4.3.5.RELEASE'
+
     compile group: 'org.slf4j', name: 'log4j-over-slf4j', version: '1.7.21'
-    compile group: 'org.springframework', name: 'spring-orm', version: '4.3.4.RELEASE'
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+    compile group: 'org.springframework', name: 'spring-orm', version: '4.3.5.RELEASE'
+    compile group: 'com.google.guava', name: 'guava', version: '20.0'
 
     compileOnly group: 'org.apache.tomcat', name: 'tomcat-dbcp', version: '8.5.8'
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
@@ -30,7 +34,15 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
     testCompile group: 'org.hsqldb', name: 'hsqldb', version: '2.3.4'
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.springframework', name: 'spring-test', version: '4.3.4.RELEASE'
+    testCompile group: 'org.springframework', name: 'spring-test', version: '4.3.5.RELEASE'
+}
 
+task hello(type: StaticfyTask)
 
+class StaticfyTask extends DefaultTask {
+
+    @TaskAction
+    perform() {
+        println("Something fdfasd ")
+    }
 }

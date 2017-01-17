@@ -6,7 +6,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 /**
@@ -15,23 +14,23 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "net.vikesh.ssm.controller")
-public class WebContext extends WebMvcConfigurerAdapter {
+public class WebApplicationConfiguration extends WebMvcConfigurerAdapter {
 
     /**
      * {@inheritDoc}
-     * <p>This implementation is empty.
+     * <p>Configure View Resolver
      */
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-        InternalResourceViewResolver defaultViewResolver = new InternalResourceViewResolver();
-        defaultViewResolver.setPrefix("/WEB-INF/jsp/views/");
-        defaultViewResolver.setSuffix(".jsp");
-        registry.viewResolver(defaultViewResolver);
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/jsp/views/");
+        viewResolver.setSuffix(".jsp");
+        registry.viewResolver(viewResolver);
     }
 
     /**
      * {@inheritDoc}
-     * <p>This implementation is empty.
+     * <p>Configure Resource Handler for static files. In production, all the files should be gzipped and minified.
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -40,5 +39,6 @@ public class WebContext extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/fonts/*").addResourceLocations("/fonts/");
         registry.addResourceHandler("/images/*").addResourceLocations("/images/");
     }
+
 
 }

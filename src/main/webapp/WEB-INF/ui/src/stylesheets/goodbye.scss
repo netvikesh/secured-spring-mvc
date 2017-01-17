@@ -1,0 +1,6 @@
+$bg-color: turquoise;
+$text-color: indigo;
+.goodbye {
+  background-color: $bg-color;
+  counter-reset: $text-color;
+}

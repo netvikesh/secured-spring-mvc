@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(value = "development")
-@ContextConfiguration(classes = {RootContext.class})
+@ContextConfiguration(classes = {RootConfiguration.class})
 public class ConfigTest {
 
     @Resource

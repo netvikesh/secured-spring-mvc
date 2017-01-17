@@ -14,8 +14,8 @@ import javax.annotation.Resource;
  * Created by Vikesh on 09-Dec-16.
  */
 @Configuration
-@Import(DBContext.class)
-public class RootContext {
+@Import(value = {SecurityConfiguration.class, PersistenceConfiguration.class, ServiceConfiguration.class})
+public class RootConfiguration {
 
     @Resource
     private Environment environment;
@@ -29,7 +29,7 @@ public class RootContext {
     }
 
     @Bean
-    @Profile("production")
+    @Profile(value = "default")
     public static PropertySourcesPlaceholderConfigurer production() {
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
         configurer.setLocation(new ClassPathResource("project.properties"));

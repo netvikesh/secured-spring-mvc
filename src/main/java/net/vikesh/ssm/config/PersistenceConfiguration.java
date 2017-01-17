@@ -3,6 +3,7 @@ package net.vikesh.ssm.config;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.AliasFor;
@@ -22,7 +23,8 @@ import java.util.Properties;
  * Created by vikekumar on 009 09-Dec-16.
  */
 @Configuration
-public class DBContext {
+@ComponentScan(value = {"net.vikesh.ssm.dao"})
+public class PersistenceConfiguration {
 
     @Resource
     private Environment env;
