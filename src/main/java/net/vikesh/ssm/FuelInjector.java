@@ -8,143 +8,67 @@ import java.util.Map;
  * Created by Vikesh on 17-Jan-17.
  */
 public class FuelInjector {
+    private static final BigInteger zero = new BigInteger("0");
+    private static final BigInteger one = new BigInteger("1");
+    private static final BigInteger two = new BigInteger("2");
+
     public static int answer(String n) {
-        if (n == null || n.length() == 0) {
+        BigInteger start = new BigInteger(n);
+        if (start.compareTo(one) < 0) {
             return 0;
-        }
-
-        final BigInteger start = new BigInteger(n);
-        if (start.equals(new BigInteger("1"))) {
+        } else if (start.equals(one)) {
             return 0;
-        } else if (start.equals(new BigInteger("2"))) {
+        } else if (start.equals(two)) {
             return 1;
-        } else {
-            Map<BigInteger, Integer> twoPowers = createPowerOfTwoUpto(start);
-            Map<BigInteger, Integer> secondMap = new HashMap<>();
-            Node root = new Node(start);
-            addFirstValueForSecondMap(twoPowers, secondMap, root);
         }
-        // Your code goes here.
-
-    }
-
-    private static void addFirstValueForSecondMap(Map<BigInteger, Integer> twoPowers, Map<BigInteger, Integer> secondMap, Node root) {
-        final BigInteger two = new BigInteger("2");
-        final BigInteger one = new BigInteger("1");
-        int count = 0;
-        if (root.value.mod(two).equals(one)) {
-            root.setDecreased(true);
-            Node next = new Node(root.value.min(one));
-            root.setAfterDecrease(next);
-        }
-    }
-
-    private static Map<BigInteger, Integer> createPowerOfTwoUpto(BigInteger start) {
+        BigInteger next = new BigInteger("3");
+        //Create all two powers
         Map<BigInteger, Integer> twoPowers = new HashMap<>();
-        if (start.compareTo(new BigInteger("1")) > 0) {
-            final BigInteger two = new BigInteger("2");
-            BigInteger now = new BigInteger("1");
-            int count = 0;
-            twoPowers.put(new BigInteger("1"), count++);
-            while (start.compareTo(now) > 0) {
-                now = now.multiply(two);
-                twoPowers.put(now, count++);
-            }
+        BigInteger now = new BigInteger("1");
+        int count = 0;
+        twoPowers.put(new BigInteger("1"), count++);
+        while (start.compareTo(now) > 0) {
+            now = now.multiply(two);
+            twoPowers.put(now, count++);
         }
-        return twoPowers;
+        if (twoPowers.containsKey(start)) {
+            return twoPowers.get(start);
+        }
+
+        //find count of new numbers
+        int initCount = 0;
+        while (start.mod(two).equals(zero)) {
+            initCount++;
+            start = start.divide(two);
+        }
+        final BigInteger minusOne = start.subtract(one);
+        final BigInteger plusOne = start.add(one);
+        while (!(twoPowers.containsKey(start) || twoPowers.containsKey(minusOne) || twoPowers.containsKey(plusOne))) {
+            fillAllMultiplesOf(next, plusOne, twoPowers);
+            next = next.add(one);
+        }
+        return minOf(twoPowers.get(minusOne), twoPowers.get(plusOne)) + initCount;
     }
 
-    static class Node {
-        private final BigInteger value;
-        private int distanceFromStart;
-        private boolean increased;
-        private boolean decreased;
-        private boolean halved;
-        private boolean inFirstMap;
-        private boolean inSecondMap;
-        private Node afterIncrease;
-        private Node afterDecrease;
-        private Node afterHalf;
-
-        Node(BigInteger value) {
-            this.value = value;
+    private static void fillAllMultiplesOf(BigInteger next, BigInteger start, Map<BigInteger, Integer> map) {
+        if (map.containsKey(next)) {
+            return;
         }
-
-        public Node getAfterIncrease() {
-            return afterIncrease;
+        while (start.compareTo(next) > 0) {
+            if (!map.containsKey(next)) {
+                final BigInteger minusOne = next.subtract(one);
+                final BigInteger plusOne = next.add(one);
+                if (!map.containsKey(next) && map.containsKey(minusOne) && map.containsKey(plusOne)) {
+                    map.put(next, minOf(map.get(minusOne), map.get(plusOne)) + 1);
+                } else {
+                    map.put(next, map.get(next.divide(two)) + 1);
+                }
+            }
+            next = next.multiply(two);
         }
+    }
 
-        public void setAfterIncrease(Node afterIncrease) {
-            this.afterIncrease = afterIncrease;
-        }
-
-        public Node getAfterDecrease() {
-            return afterDecrease;
-        }
-
-        public void setAfterDecrease(Node afterDecrease) {
-            this.afterDecrease = afterDecrease;
-        }
-
-        public Node getAfterHalf() {
-            return afterHalf;
-        }
-
-        public void setAfterHalf(Node afterHalf) {
-            this.afterHalf = afterHalf;
-        }
-
-        public int getDistanceFromStart() {
-            return distanceFromStart;
-        }
-
-        public void setDistanceFromStart(int distanceFromStart) {
-            this.distanceFromStart = distanceFromStart;
-        }
-
-        public boolean isIncreased() {
-            return increased;
-        }
-
-        public void setIncreased(boolean increased) {
-            this.increased = increased;
-        }
-
-        public boolean isDecreased() {
-            return decreased;
-        }
-
-        public void setDecreased(boolean decreased) {
-            this.decreased = decreased;
-        }
-
-        public boolean isHalved() {
-            return halved;
-        }
-
-        public void setHalved(boolean halved) {
-            this.halved = halved;
-        }
-
-        public boolean isInFirstMap() {
-            return inFirstMap;
-        }
-
-        public void setInFirstMap(boolean inFirstMap) {
-            this.inFirstMap = inFirstMap;
-        }
-
-        public boolean isInSecondMap() {
-            return inSecondMap;
-        }
-
-        public void setInSecondMap(boolean inSecondMap) {
-            this.inSecondMap = inSecondMap;
-        }
-
-        public BigInteger getValue() {
-            return value;
-        }
+    private static Integer minOf(Integer first, Integer second) {
+        return first < second ? first : second;
     }
 }
-
