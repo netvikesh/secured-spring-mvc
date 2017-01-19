@@ -21,48 +21,58 @@ public class FuelInjector {
         } else if (start.equals(two)) {
             return 1;
         }
-        BigInteger next = new BigInteger("3");
         //Create all two powers
         Map<BigInteger, Integer> twoPowers = new HashMap<>();
         BigInteger now = new BigInteger("1");
         int count = 0;
         twoPowers.put(new BigInteger("1"), count++);
-        while (start.compareTo(now) > 0) {
+        while (start.compareTo(now) >= 0) {
             now = now.multiply(two);
             twoPowers.put(now, count++);
         }
         if (twoPowers.containsKey(start)) {
             return twoPowers.get(start);
         }
+        return getMinSteps(start, twoPowers);
+    }
 
-        //find count of new numbers
-        int initCount = 0;
-        while (start.mod(two).equals(zero)) {
-            initCount++;
-            start = start.divide(two);
+    private static int getMinSteps(BigInteger start, Map<BigInteger, Integer> twoPowers) {
+        if (twoPowers.containsKey(start)) {
+            return twoPowers.get(start);
+        } else if (start.mod(two).equals(zero)) {
+            return getMinSteps(start.divide(two), twoPowers) + 1;
+        } else {
+            final BigInteger minusOne = start.subtract(one);
+            final BigInteger plusOne = start.add(one);
+            twoPowers.put(minusOne, getMinSteps(minusOne.divide(two), twoPowers) + 1);
+            twoPowers.put(plusOne, getMinSteps(plusOne.divide(two), twoPowers) + 1);
+            BigInteger next = start;
+            while (!(twoPowers.containsKey(start))) {
+                fillAllMultiplesOf(next, plusOne, twoPowers);
+                BigInteger twice = next.multiply(two);
+                if (twice.equals(minusOne) || twice.equals(plusOne)) {
+                    return twoPowers.get(next) + 1;
+                }
+                if (twoPowers.containsKey(twice.subtract(one)) || twoPowers.containsKey(twice.add(one))) {
+                    return twoPowers.get(twice.subtract(one)) != null ? twoPowers.get(twice.subtract(one)) + 1 : twoPowers.get(twice.subtract(one)) + 1;
+                }
+                next = next.add(one);
+            }
+            return minOf(twoPowers.get(minusOne), twoPowers.get(plusOne)) + 1;
         }
-        final BigInteger minusOne = start.subtract(one);
-        final BigInteger plusOne = start.add(one);
-        while (!(twoPowers.containsKey(start) || twoPowers.containsKey(minusOne) || twoPowers.containsKey(plusOne))) {
-            fillAllMultiplesOf(next, plusOne, twoPowers);
-            next = next.add(one);
-        }
-        return minOf(twoPowers.get(minusOne), twoPowers.get(plusOne)) + initCount;
     }
 
     private static void fillAllMultiplesOf(BigInteger next, BigInteger start, Map<BigInteger, Integer> map) {
         if (map.containsKey(next)) {
             return;
         }
-        while (start.compareTo(next) > 0) {
-            if (!map.containsKey(next)) {
-                final BigInteger minusOne = next.subtract(one);
-                final BigInteger plusOne = next.add(one);
-                if (!map.containsKey(next) && map.containsKey(minusOne) && map.containsKey(plusOne)) {
-                    map.put(next, minOf(map.get(minusOne), map.get(plusOne)) + 1);
-                } else {
-                    map.put(next, map.get(next.divide(two)) + 1);
-                }
+        while (start.compareTo(next) > 0 && !map.containsKey(next)) {
+            final BigInteger minusOne = next.subtract(one);
+            final BigInteger plusOne = next.add(one);
+            if (map.containsKey(minusOne) && map.containsKey(plusOne)) {
+                map.put(next, minOf(map.get(minusOne), map.get(plusOne)) + 1);
+            } else {
+                map.put(next, map.get(next.divide(two)) + 1);
             }
             next = next.multiply(two);
         }
