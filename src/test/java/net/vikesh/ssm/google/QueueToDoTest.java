@@ -5,6 +5,7 @@ package net.vikesh.ssm.google;
  */
 public class QueueToDoTest {
     public static void main(String[] args) {
-        System.out.println(QueueToDo.answer(17, 400000000));
+        System.out.println(QueueToDo.answer(0, 3));
+        System.out.println(QueueToDo.answer(17, 4));
     }
 }
