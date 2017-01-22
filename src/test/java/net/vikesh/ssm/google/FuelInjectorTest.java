@@ -1,6 +1,4 @@
-package net.vikesh.ssm.config;
-
-import net.vikesh.ssm.FuelInjector;
+package net.vikesh.ssm.google;
 
 import java.util.Random;
 

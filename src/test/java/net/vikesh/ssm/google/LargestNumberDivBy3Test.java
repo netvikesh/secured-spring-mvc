@@ -1,6 +1,4 @@
-package net.vikesh.ssm.config;
-
-import net.vikesh.ssm.LargestNumberDivBy3;
+package net.vikesh.ssm.google;
 
 import java.io.File;
 import java.io.FileWriter;

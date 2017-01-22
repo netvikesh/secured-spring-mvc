@@ -1,4 +1,4 @@
-package net.vikesh.ssm;
+package net.vikesh.ssm.google;
 
 import java.util.ArrayList;
 import java.util.List;

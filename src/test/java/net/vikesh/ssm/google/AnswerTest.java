@@ -1,6 +1,4 @@
-package net.vikesh.ssm.config;
-
-import net.vikesh.ssm.Answer;
+package net.vikesh.ssm.google;
 
 /**
  * Created by Vikesh on 15-Jan-17.
